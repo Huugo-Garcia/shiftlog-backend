@@ -1,5 +1,6 @@
 import express from 'express';
 import db from './config/db.js';
+import cors from 'cors';
 // import './models/Index.js;
 import User from './models/User.js';
 
@@ -9,6 +10,13 @@ import shiftRoutes from './routes/shiftRoutes.js';
 import passwordRoutes from './routes/passwordRoutes.js';
 
 const app = express();
+
+// Enable CORS
+app.use(
+  cors({
+    origin: 'http://localhost:5173'
+  })
+);
 
 // Requirements in JSON
 app.use(express.json());

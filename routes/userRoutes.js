@@ -16,7 +16,7 @@ import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Get all the users
-router.get('/users', protect, getUsers);
+router.get('/users', getUsers);
 
 // Create a new user
 router.post(
