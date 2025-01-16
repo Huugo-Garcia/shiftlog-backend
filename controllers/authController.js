@@ -26,12 +26,13 @@ export const loginUser = async (req, res) => {
 
     // Genarate JWT token
     const token = jwt.sign(
-      { id: user.id, payroll_number: user.payroll_number },
+      { id: user.id, payroll_number: user.payroll_number, is_admin: user.is_admin },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
+    
 
-    res.json({ message: 'Login exitoso', token });
+    res.json({ message: 'Login exitoso', token, is_admin: user.is_admin });
   } catch (error) {
     res.status(500).json({ message: 'Error al iniciar sesión' });
   }
