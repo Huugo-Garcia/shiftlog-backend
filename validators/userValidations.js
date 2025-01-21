@@ -1,5 +1,6 @@
 import { check } from 'express-validator';
 import User from '../models/User.js';
+import Team from '../models/Team.js';
 
 // This array contains the rules to validate the user data
 export const createUserValidationsRules = [
@@ -23,7 +24,19 @@ export const createUserValidationsRules = [
   check('phone_number')
     .isMobilePhone('es-MX')
     .withMessage('El número de teléfono es inválido'),
-  check('password').notEmpty().withMessage('La contraseña es requerida')
+  check('password').notEmpty().withMessage('La contraseña es requerida'),
+  check('team_id')
+    .notEmpty()
+    .withMessage('El equipo es requerido')
+    .isNumeric()
+    .withMessage('El equipo debe ser numérico')
+    .custom(async (team_id) => {
+      const team = await Team.findByPk(team_id);
+      if (!team) {
+        throw new Error('El equipo no existe');
+      }
+      return true;
+    })
 ];
 
 export const updateUserValidationRules = [

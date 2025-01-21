@@ -5,37 +5,37 @@ const Shift = db.define('shifts', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
 
-  userId: {
+  user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'users',
-      key: 'id',
-    },
+      key: 'id'
+    }
   },
 
   start_time: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: false
   },
 
   end_time: {
     type: DataTypes.DATE,
-    allowNull: true,
+    allowNull: true
   },
 
   start_location: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
 
   end_location: {
     type: DataTypes.STRING,
-    allowNull: true,
-  },
+    allowNull: true
+  }
 });
 
 export default Shift;

@@ -1,8 +1,8 @@
 import express from 'express';
 import db from './config/db.js';
 import cors from 'cors';
-// import './models/Index.js;
-import User from './models/User.js';
+import './models/index.js';
+// import User from './models/User.js';
 
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
