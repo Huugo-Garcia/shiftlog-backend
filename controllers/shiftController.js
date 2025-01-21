@@ -1,4 +1,9 @@
 import Shift from '../models/Shift.js';
+import { Op, where } from 'sequelize';
+import {
+  getStartOfPayrollPeriod,
+  getEndOfPayrollPeriod
+} from '../utils/dateUtils.js';
 
 // Get all shifts
 export const getShifts = async (req, res) => {
@@ -45,5 +50,38 @@ export const handleShift = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Algo salió mal intentalo nuevamente.' });
+  }
+};
+
+// Get shifts of any period
+export const getShiftsOfWeek = async (req, res) => {
+  const { startDate } = req.query;
+
+  if (!startDate) {
+    return res
+      .status(400)
+      .json({ error: 'Proporciona una fecha de inicio valida' });
+  }
+
+  const startOfWeek = getStartOfPayrollPeriod(new Date(startDate));
+  const endOfWeek = getEndOfPayrollPeriod(new Date(startDate));
+
+  console.log('Start of Week:', startOfWeek);
+  console.log('End of Week:', endOfWeek);
+
+  try {
+    const shifts = await Shift.findAll({
+      where: {
+        start_time: {
+          [Op.between]: [startOfWeek, endOfWeek]
+        }
+      }
+    });
+    res.json(shifts);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({
+      error: 'Error al obtener los turnos de la semana'
+    });
   }
 };
