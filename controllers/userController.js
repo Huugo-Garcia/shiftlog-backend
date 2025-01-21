@@ -21,7 +21,8 @@ export const createUser = async (req, res) => {
     last_name,
     phone_number,
     password,
-    is_admin
+    is_admin,
+    team_id
   } = req.body;
 
   try {
@@ -32,7 +33,8 @@ export const createUser = async (req, res) => {
       last_name,
       phone_number,
       password: hashedPassword,
-      is_admin
+      is_admin,
+      team_id
     });
     res.status(201).json(newUser);
   } catch (error) {
@@ -75,7 +77,8 @@ export const updateUser = async (req, res) => {
     last_name,
     phone_number,
     password,
-    is_admin
+    is_admin,
+    team_id
   } = req.body;
 
   try {
@@ -94,6 +97,7 @@ export const updateUser = async (req, res) => {
         user.password = await bcrypt.hash(password, 10);
       }
       user.is_admin = is_admin;
+      user.team_id = team_id;
 
       await user.save();
       res.json(user);

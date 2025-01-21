@@ -3,11 +3,11 @@ import Team from './Team.js';
 import Shift from './Shift.js';
 
 // Relation between User and Team (Many-to-One)
-User.belongsTo(Team, { foreignKey: 'teamId', as: 'team' });
-Team.hasMany(User, { foreignKey: 'teamId', as: 'users' });
+User.belongsTo(Team, { foreignKey: 'team_id', as: 'team' });
+Team.hasMany(User, { foreignKey: 'team_id', as: 'users' });
 
 // Relation between User and Shift (One-to-Many)
-User.hasMany(Shift, { foreignKey: 'userId', as: 'shifts' });
-Shift.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(Shift, { foreignKey: 'user_id', as: 'shifts' });
+Shift.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 export { User, Team, Shift };
