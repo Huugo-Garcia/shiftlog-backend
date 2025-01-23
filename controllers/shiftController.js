@@ -18,6 +18,30 @@ export const getShifts = async (req, res) => {
   }
 };
 
+// Get a shift by ID
+export const getShiftByID = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const shift = await Shift.findOne({
+      where: {
+        id
+      }
+    });
+    if (shift) {
+      res.json(shift);
+    } else {
+      res.status(404).json({
+        message: 'Turno no encontrado'
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 // Handle shifts
 export const handleShift = async (req, res) => {
   const { start_time, end_time, start_location, end_location, user_id } =
