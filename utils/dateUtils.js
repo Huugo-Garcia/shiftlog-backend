@@ -1,7 +1,7 @@
 export const getStartOfPayrollPeriod = (date) => {
   const startOfPayrollPeriod = new Date(date);
   const day = startOfPayrollPeriod.getDay();
-  const diff = startOfPayrollPeriod.getDate() - day + (day >= 4 ? 4 : -3); // Ajustar para que el jueves sea el inicio
+  const diff = startOfPayrollPeriod.getDate() - day + (day >= 4 ? 4 : -3);
   startOfPayrollPeriod.setDate(diff);
   startOfPayrollPeriod.setHours(0, 0, 0, 0);
   return startOfPayrollPeriod;

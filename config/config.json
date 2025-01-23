@@ -4,7 +4,11 @@
     "password": "123456",
     "database": "testdb",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "-06:00",
+    "dialectOptions": {
+      "timezone": "local"
+    }
   },
   "test": {
     "username": "root",

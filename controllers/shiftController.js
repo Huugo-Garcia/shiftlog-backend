@@ -1,4 +1,5 @@
 import Shift from '../models/Shift.js';
+import User from '../models/User.js';
 import { Op, where } from 'sequelize';
 import {
   getStartOfPayrollPeriod,
@@ -75,7 +76,14 @@ export const getShiftsOfWeek = async (req, res) => {
         start_time: {
           [Op.between]: [startOfWeek, endOfWeek]
         }
-      }
+      },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['first_name', 'last_name', 'payroll_number']
+        }
+      ]
     });
     res.json(shifts);
   } catch (error) {

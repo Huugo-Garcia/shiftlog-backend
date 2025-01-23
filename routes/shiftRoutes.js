@@ -3,6 +3,7 @@ import {
   handleShift,
   getShiftsOfWeek
 } from '../controllers/shiftController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
