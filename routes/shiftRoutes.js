@@ -2,7 +2,7 @@ import express from 'express';
 import {
   handleShift,
   getShiftsOfWeek,
-  getShiftByID
+  downloadShiftsExcel
 } from '../controllers/shiftController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -14,7 +14,7 @@ router.post('/shifts', handleShift);
 // Get the shifts for a period week
 router.get('/shifts/week', getShiftsOfWeek);
 
-//Get a specific shoift
-router.get('/shifts/:id', getShiftByID);
+// Download excel file
+router.get('/shifts/excel', downloadShiftsExcel);
 
 export default router;
