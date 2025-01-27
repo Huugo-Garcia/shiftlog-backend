@@ -5,6 +5,8 @@ import {
   getStartOfPayrollPeriod,
   getEndOfPayrollPeriod
 } from '../utils/dateUtils.js';
+import ExcelJS from 'exceljs';
+import { calculateWorkedHours } from '../../shiftlog-panel/src/utils/dateUtils.js';
 
 // Get all shifts
 export const getShifts = async (req, res) => {
@@ -90,6 +92,92 @@ export const getShiftsOfWeek = async (req, res) => {
     console.error('Error:', error);
     res.status(500).json({
       error: 'Error al obtener los turnos de la semana'
+    });
+  }
+};
+
+//Generate and download excel file
+export const downloadShiftsExcel = async (req, res) => {
+  const { startDate } = req.query;
+
+  if (!startDate) {
+    return res
+      .status(400)
+      .json({ error: 'Proporciona una fecha de inicio valida' });
+  }
+
+  const startOfWeek = getStartOfPayrollPeriod(new Date(startDate));
+  const endOfWeek = getEndOfPayrollPeriod(new Date(startDate));
+
+  console.log('Start of Week:', startOfWeek);
+  console.log('End of Week:', endOfWeek);
+
+  try {
+    const shifts = await Shift.findAll({
+      where: {
+        start_time: {
+          [Op.between]: [startOfWeek, endOfWeek]
+        }
+      },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['first_name', 'last_name', 'payroll_number']
+        }
+      ]
+    });
+
+    // Generate Excel file
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Turnos');
+
+    worksheet.columns = [
+      { header: 'Número de Nómina', key: 'payroll_number', width: 20 },
+      { header: 'Nombre', key: 'name', width: 30 },
+      {
+        header: 'Fecha/Hora de Entrada',
+        key: 'start_time',
+        width: 30,
+        style: { numFmt: 'dd/mm/yyyy hh:mm:ss' }
+      },
+      {
+        header: 'Fecha/Hora de Salida',
+        key: 'end_time',
+        width: 30,
+        style: { numFmt: 'dd/mm/yyyy hh:mm:ss' }
+      },
+      { header: 'Horas de Trabajo', key: 'worked_hours', width: 20 }
+    ];
+
+    shifts.forEach((shift) => {
+      const { start_time, end_time, user } = shift.dataValues;
+      const { payroll_number, first_name, last_name } = user.dataValues;
+
+      worksheet.addRow({
+        payroll_number,
+        name: `${first_name} ${last_name}`,
+        start_time,
+        end_time: end_time || '--',
+        worked_hours: end_time
+          ? calculateWorkedHours(start_time, end_time)
+          : '--'
+      });
+    });
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    const hey = 'jola';
+    res.setHeader('Content-Disposition', 'attachment; filename=turnos.xlsx');
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({
+      error: 'Error al generar el archivo de Excel'
     });
   }
 };
