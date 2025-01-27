@@ -37,3 +37,18 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: 'Error al iniciar sesión' });
   }
 };
+
+export const verifyToken = (req, res) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ valid: false });
+  }
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ valid: true });
+  } catch (error) {
+    res.json({ valid: false });
+  }
+};
