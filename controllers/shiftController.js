@@ -69,9 +69,6 @@ export const getShiftsOfWeek = async (req, res) => {
   const startOfWeek = getStartOfPayrollPeriod(new Date(startDate));
   const endOfWeek = getEndOfPayrollPeriod(new Date(startDate));
 
-  console.log('Start of Week:', startOfWeek);
-  console.log('End of Week:', endOfWeek);
-
   try {
     const shifts = await Shift.findAll({
       where: {
@@ -108,9 +105,6 @@ export const downloadShiftsExcel = async (req, res) => {
 
   const startOfWeek = getStartOfPayrollPeriod(new Date(startDate));
   const endOfWeek = getEndOfPayrollPeriod(new Date(startDate));
-
-  console.log('Start of Week:', startOfWeek);
-  console.log('End of Week:', endOfWeek);
 
   try {
     const shifts = await Shift.findAll({
