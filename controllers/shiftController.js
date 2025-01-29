@@ -6,7 +6,7 @@ import {
   getEndOfPayrollPeriod
 } from '../utils/dateUtils.js';
 import ExcelJS from 'exceljs';
-import { calculateWorkedHours } from '../../shiftlog-panel/src/utils/dateUtils.js';
+import { calculateWorkedHours } from '../utils/dateUtils.js';
 
 // Get all shifts
 export const getShifts = async (req, res) => {

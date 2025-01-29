@@ -1,3 +1,5 @@
+import { format, differenceInHours, differenceInMinutes } from "date-fns";
+
 export const getStartOfPayrollPeriod = (date) => {
   const startOfPayrollPeriod = new Date(date);
   const day = startOfPayrollPeriod.getDay();
@@ -12,4 +14,12 @@ export const getEndOfPayrollPeriod = (date) => {
   endOfPayrollPeriod.setDate(endOfPayrollPeriod.getDate() + 6);
   endOfPayrollPeriod.setHours(23, 59, 59, 999);
   return endOfPayrollPeriod;
+};
+
+export const calculateWorkedHours = (start, end) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const hours = differenceInHours(endDate, startDate);
+  const minutes = differenceInMinutes(endDate, startDate) % 60;
+  return `${hours}h ${minutes}m`;
 };
