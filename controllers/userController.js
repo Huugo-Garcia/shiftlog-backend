@@ -1,10 +1,19 @@
 import User from '../models/User.js';
+import Team from '../models/Team.js';
 import bcrypt from 'bcrypt';
 
 // Method to get all users
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [
+        {
+          model: Team,
+          as: 'team',
+          attributes: ['name']
+        }
+      ]
+    });
     res.json(users);
   } catch (error) {
     res.status(500).json({
