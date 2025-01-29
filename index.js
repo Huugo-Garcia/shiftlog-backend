@@ -33,6 +33,10 @@ app.use('/api', passwordRoutes);
 // Connection to shift routes
 app.use('/api', shiftRoutes);
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 // Conection to database
 try {
   await db.authenticate();
@@ -43,7 +47,7 @@ try {
 }
 
 // Port selection
-const port = 3000;
+const port = process.env.PORT;
 
 app.listen(port, () => {
   console.log(`Server works in port ${port}`);
