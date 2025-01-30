@@ -19,9 +19,6 @@ const db = new Sequelize(
       acquire: 3000,
       idle: 10000,
     },
-    dialectOptions: {
-      timezone: 'local',
-    },
     operatorAliases: false,
   },
 );
