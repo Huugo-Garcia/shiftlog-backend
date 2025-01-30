@@ -19,7 +19,6 @@ const db = new Sequelize(
       acquire: 3000,
       idle: 10000,
     },
-    timezone: '-06:00',
     dialectOptions: {
       timezone: 'local',
     },

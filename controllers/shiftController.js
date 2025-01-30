@@ -1,10 +1,6 @@
 import Shift from '../models/Shift.js';
 import User from '../models/User.js';
 import { Op, where } from 'sequelize';
-import {
-  getStartOfPayrollPeriod,
-  getEndOfPayrollPeriod
-} from '../utils/dateUtils.js';
 import ExcelJS from 'exceljs';
 import { calculateWorkedHours } from '../utils/dateUtils.js';
 
@@ -58,22 +54,22 @@ export const handleShift = async (req, res) => {
 
 // Get shifts of any period
 export const getShiftsOfWeek = async (req, res) => {
-  const { startDate } = req.query;
+  const { startDate, endDate } = req.query;
 
-  if (!startDate) {
-    return res
-      .status(400)
-      .json({ error: 'Proporciona una fecha de inicio valida' });
+  if (!startDate || !endDate) {
+    return res.status(400).json({ error: 'Proporciona las fechas startDate y endDate en el formato YYYY-MM-DD' });
   }
 
-  const startOfWeek = getStartOfPayrollPeriod(new Date(startDate));
-  const endOfWeek = getEndOfPayrollPeriod(new Date(startDate));
-
   try {
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    end.set(23, 59, 59, 999);
     const shifts = await Shift.findAll({
       where: {
         start_time: {
-          [Op.between]: [startOfWeek, endOfWeek]
+          [Op.between]: [start,end]
         }
       },
       include: [
@@ -84,18 +80,20 @@ export const getShiftsOfWeek = async (req, res) => {
         }
       ]
     });
+
     res.json(shifts);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({
-      error: 'Error al obtener los turnos de la semana'
+      error: 'Error al obtener los turnos'
     });
   }
 };
 
+
 //Generate and download excel file
 export const downloadShiftsExcel = async (req, res) => {
-  const { startDate } = req.query;
+  const { startDate, endDate } = req.query;
 
   if (!startDate) {
     return res
@@ -103,14 +101,11 @@ export const downloadShiftsExcel = async (req, res) => {
       .json({ error: 'Proporciona una fecha de inicio valida' });
   }
 
-  const startOfWeek = getStartOfPayrollPeriod(new Date(startDate));
-  const endOfWeek = getEndOfPayrollPeriod(new Date(startDate));
-
   try {
     const shifts = await Shift.findAll({
       where: {
         start_time: {
-          [Op.between]: [startOfWeek, endOfWeek]
+          [Op.between]: [new Date(startDate), new Date(endDate)]
         }
       },
       include: [
@@ -163,7 +158,6 @@ export const downloadShiftsExcel = async (req, res) => {
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     );
-    const hey = 'jola';
     res.setHeader('Content-Disposition', 'attachment; filename=turnos.xlsx');
 
     await workbook.xlsx.write(res);
