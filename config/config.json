@@ -1,10 +1,13 @@
 {
   "development": {
     "username": "root",
-    "password": "Rodeo2323-",
+    "password": "pass",
     "database": "shiftlog",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "timezone": "local"
+    }
   },
   "test": {
     "username": "root",
