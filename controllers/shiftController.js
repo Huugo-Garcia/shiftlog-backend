@@ -61,11 +61,11 @@ export const getShiftsOfWeek = async (req, res) => {
   }
 
   try {
-
     const start = new Date(startDate);
     const end = new Date(endDate);
 
     end.set(23, 59, 59, 999);
+
     const shifts = await Shift.findAll({
       where: {
         start_time: {
@@ -93,7 +93,10 @@ export const getShiftsOfWeek = async (req, res) => {
 
 //Generate and download excel file
 export const downloadShiftsExcel = async (req, res) => {
-  const { startDate, endDate } = req.query;
+  const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    end.set(23, 59, 59, 999);
 
   if (!startDate) {
     return res
@@ -105,7 +108,7 @@ export const downloadShiftsExcel = async (req, res) => {
     const shifts = await Shift.findAll({
       where: {
         start_time: {
-          [Op.between]: [new Date(startDate), new Date(endDate)]
+          [Op.between]: [start,end]
         }
       },
       include: [
