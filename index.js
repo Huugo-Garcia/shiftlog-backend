@@ -8,13 +8,15 @@ import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import shiftRoutes from './routes/shiftRoutes.js';
 import passwordRoutes from './routes/passwordRoutes.js';
+import teamRoutes from './routes/teamRoutes.js';
 
 const app = express();
 
 // Enable CORS
 app.use(
   cors({
-    origin: 'http://localhost:5173'
+    origin: 'http://localhost:5173',
+    credentials: true
   })
 );
 
@@ -36,6 +38,9 @@ app.use('/api', shiftRoutes);
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+// Contection to team routes
+app.use('/api', teamRoutes);
 
 // Conection to database
 try {
