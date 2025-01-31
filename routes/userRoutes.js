@@ -23,7 +23,7 @@ router.get('/users', protect, getUsers);
 // Create a new user
 router.post(
   '/users',
-  protect,
+  //protect,
   createUserValidationsRules,
   validate,
   createUser
