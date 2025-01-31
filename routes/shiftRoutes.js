@@ -9,12 +9,12 @@ import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Handle shifts
-router.post('/shifts', handleShift);
+router.post('/shifts', protect, handleShift);
 
 // Get the shifts for a period week
-router.get('/shifts/week', getShiftsOfWeek);
+router.get('/shifts/week', protect, getShiftsOfWeek);
 
 // Download excel file
-router.get('/shifts/excel', downloadShiftsExcel);
+router.get('/shifts/excel', protect, downloadShiftsExcel);
 
 export default router;

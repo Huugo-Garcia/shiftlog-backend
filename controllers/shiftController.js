@@ -57,7 +57,12 @@ export const getShiftsOfWeek = async (req, res) => {
   const { startDate, endDate } = req.query;
 
   if (!startDate || !endDate) {
-    return res.status(400).json({ error: 'Proporciona las fechas startDate y endDate en el formato YYYY-MM-DD' });
+    return res
+      .status(400)
+      .json({
+        error:
+          'Proporciona las fechas startDate y endDate en el formato YYYY-MM-DD'
+      });
   }
 
   try {
@@ -68,7 +73,7 @@ export const getShiftsOfWeek = async (req, res) => {
     const shifts = await Shift.findAll({
       where: {
         start_time: {
-          [Op.between]: [start,end]
+          [Op.between]: [start, end]
         }
       },
       include: [
@@ -89,13 +94,13 @@ export const getShiftsOfWeek = async (req, res) => {
   }
 };
 
-
 //Generate and download excel file
 export const downloadShiftsExcel = async (req, res) => {
+  const { startDate, endDate } = req.query;
   const start = new Date(startDate);
-    const end = new Date(endDate);
+  const end = new Date(endDate);
 
-    end.setHours(23, 59, 59, 999);
+  end.setHours(23, 59, 59, 999);
 
   if (!startDate) {
     return res
@@ -107,7 +112,7 @@ export const downloadShiftsExcel = async (req, res) => {
     const shifts = await Shift.findAll({
       where: {
         start_time: {
-          [Op.between]: [start,end]
+          [Op.between]: [start, end]
         }
       },
       include: [

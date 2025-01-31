@@ -4,11 +4,13 @@ import {
   updateUser,
   deleteUser,
   getUsers,
-  getUserById
+  getUserById,
+  changePassword
 } from '../controllers/userController.js';
 import {
   createUserValidationsRules,
-  updateUserValidationRules
+  updateUserValidationRules,
+  changePasswordValidationRules
 } from '../validators/userValidations.js';
 import { validate } from '../middleware/validate.js';
 import { protect } from '../middleware/authMiddleware.js';
@@ -16,12 +18,12 @@ import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Get all the users
-router.get('/users', getUsers);
+router.get('/users', protect, getUsers);
 
 // Create a new user
 router.post(
   '/users',
-  // protect,
+  protect,
   createUserValidationsRules,
   validate,
   createUser
@@ -41,5 +43,14 @@ router.put(
 
 // Delete a user by id
 router.delete('/users/:id', protect, deleteUser);
+
+// Change password
+router.put(
+  '/users/:id/change-password',
+  protect,
+  changePasswordValidationRules,
+  validate,
+  changePassword
+);
 
 export default router;

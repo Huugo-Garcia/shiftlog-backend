@@ -149,3 +149,28 @@ export const deleteUser = async (req, res) => {
     });
   }
 };
+
+// Method to change the password of a user
+export const changePassword = async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  try {
+    // Buscar el usuario por ID
+    const user = await User.findOne({ where: { id } });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Hashear la nueva contraseña proporcionada por el administrador
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Actualizar la contraseña en la base de datos
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

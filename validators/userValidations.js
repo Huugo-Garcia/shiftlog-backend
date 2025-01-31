@@ -65,3 +65,12 @@ export const updateUserValidationRules = [
     .notEmpty()
     .withMessage('La contraseña es requerida')
 ];
+
+export const changePasswordValidationRules = [
+  check('password')
+    .trim()
+    .notEmpty()
+    .withMessage('La contraseña es requerida')
+    .isLength({ min: 6 })
+    .withMessage('La contraseña debe tener al menos 6 caracteres')
+];
