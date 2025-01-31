@@ -95,7 +95,7 @@ export const downloadShiftsExcel = async (req, res) => {
   const start = new Date(startDate);
     const end = new Date(endDate);
 
-    end.set(23, 59, 59, 999);
+    end.setHours(23, 59, 59, 999);
 
   if (!startDate) {
     return res
